@@ -14,7 +14,6 @@ import           Snap.Snaplet.Scatter.Internal
 initScatter :: (ScatterBuilder (ScatterHandler b ()) ()) -> SnapletInit b (Scatter b)
 initScatter urls = makeSnaplet "scatter" "Type safe URLs in Snap" Nothing $ do
   return $ Scatter $ (snd . runWriter) urls
-  
 
 filterThrough :: [(ByteString -> Maybe (Handler b (Scatter b) ()))] -> Handler b (Scatter b) ()
 filterThrough (cur:[]) = do
