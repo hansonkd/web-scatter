@@ -78,7 +78,7 @@ trialFunc a b = do
 
 
 --- This is our example URL
-trial = ("r" :: C.ByteString) :/: (Just . Zong) :/: (Just . Zing)
+trial = ("/r" :: C.ByteString) :/: (Just . Zong) :/: (Just . Zing)
 
 --- We build our URLs
 myURLs :: ScatterBuilder (ScatterHandler App ()) ()

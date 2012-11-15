@@ -210,7 +210,7 @@ logit a = print "got it" >> return a
 urlMapBuilder :: (URLPiece a b, ParamTree b (Maybe f), TupleApply b f (Maybe g), TupleChained g d e) => a -> d -> (ByteString -> Maybe e)
 urlMapBuilder piece f =
     let flattened = flatten $ piece
-        regexPat  = "^/" `C.append` (regexize piece)
+        regexPat  = "^" `C.append` (regexize piece)
         paramTree = fillParams $ flattened
     in
     
@@ -227,4 +227,4 @@ renderURL piece =
     let flattened = flatten piece
         url = urlConstruct piece
     in
-    (generateURLFunc flattened url x)
+    (generateURLFunc flattened url)
