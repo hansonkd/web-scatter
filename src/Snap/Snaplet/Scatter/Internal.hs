@@ -156,6 +156,12 @@ instance (URLFragment a, URLGen b (c -> d)) => URLGen ((ByteString -> Maybe a) :
 class ParamTree a b | a -> b where
     fillParams :: a -> ([ByteString] -> b)
     
+instance ParamTree (ByteString -> a) (Maybe (ByteString)) where
+    fillParams _ = (\params -> do
+        case params of
+            []        -> Nothing
+            (f:[])    -> Just f)
+                
 instance ParamTree ((ByteString -> a) :/: (ByteString -> b)) (Maybe (ByteString, ByteString)) where
     fillParams _ = (\params -> do
         case params of
