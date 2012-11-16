@@ -68,6 +68,11 @@ data Zong = Zong ByteString
 instance URLFragment Zong where
     urlize (Zong a) = a
 
+data Zang = Zang ByteString
+    deriving (Show)
+instance URLFragment Zang where
+    urlize (Zang a) = a
+    
 
 --- Ignore ScatterHandler Requirement for now. Will change Later
 trialFunc :: Zong -> Zing -> ScatterHandler App ()
@@ -75,15 +80,18 @@ trialFunc a b = do
     writeBS $ "Current inputs: " `C.append` " " `C.append` (fromString $ show $  a) `C.append` " "`C.append` (fromString $ show $  b)
     writeBS $ "\nBuilt URL:  " `C.append` ((renderURL trial) (Zong "Zongy") (Zing "Zingy"))
 
-
+trialFunc2 :: Zang -> ScatterHandler App ()
+trialFunc2 a = do
+    writeBS $ "2"
 
 --- This is our example URL
 trial = ("/r" :: C.ByteString) :/: (Just . Zong) :/: (Just . Zing)
+trial2 = ("/rc" :: C.ByteString) :/: (Just . Zang)
 
 --- We build our URLs
 myURLs :: ScatterBuilder (ScatterHandler App ()) ()
 myURLs = do
     putURL trial trialFunc
-
+    putURL trial2 trialFunc2
          
     
