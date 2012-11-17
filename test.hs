@@ -73,6 +73,17 @@ data Zang = Zang ByteString
 instance URLFragment Zang where
     urlize (Zang a) = a
     
+data Zung = Zun | Zug
+    deriving (Show)
+instance URLFragment Zung where
+    urlize Zun = "zun"
+    urlize Zug = "zug"
+
+makeZung :: ByteString -> Maybe Zung
+makeZung a | a == "zun" = Just Zun
+           | a == "zug" = Just Zug
+           | otherwise = Nothing
+    
 
 --- Ignore ScatterHandler Requirement for now. Will change Later
 trialFunc :: Zong -> Zing -> ScatterHandler App ()
@@ -81,17 +92,24 @@ trialFunc a b = do
     writeBS $ "\nBuilt URL:  " `C.append` ((renderURL trial) (Zong "Zongy") (Zing "Zingy"))
 
 trialFunc2 :: Zang -> ScatterHandler App ()
-trialFunc2 a = do
-    writeBS $ "2"
+trialFunc2 (Zang a) = do
+    writeBS $ a
+
+patMatch :: Zung -> ScatterHandler App ()
+patMatch Zun = writeBS "You put in zun"
+patMatch Zug = writeBS "You put in zug"
+
 
 --- This is our example URL
 trial = ("/r" :: C.ByteString) :/: (Just . Zong) :/: (Just . Zing)
+paturl = ("/rc" :: C.ByteString) :/: (makeZung)
 trial2 = ("/rc" :: C.ByteString) :/: (Just . Zang)
 
 --- We build our URLs
 myURLs :: ScatterBuilder (ScatterHandler App ()) ()
 myURLs = do
     putURL trial trialFunc
-    putURL trial2 trialFunc2
+    putURL paturl patMatch -- If url is /rc/zun or /rc/zug will match here
+    putURL trial2 trialFunc2 -- else it will match here.
          
     
